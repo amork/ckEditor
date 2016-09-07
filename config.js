@@ -4,7 +4,7 @@ CKEDITOR.editorConfig = function( config ) {
 	config.title = false;
 
 	// '*(*);*{*}' allows any class and any inline style.
-	config.extraAllowedContent = '*[data-id, par-style, start, type, contenteditable]; *(*); *{*}; table[cellspacing, cellpadding]; tr; td; tbody; div;h1;h2;h3;h4;h5;h6;';
+	config.extraAllowedContent = '*[data-id, par-style, start, type, contenteditable]; *(*); *{*}; table[cellspacing, cellpadding]; tr; td; tbody; div;h1;h2;h3;h4;h5;h6; a;';
 
 	// Disable auto remove empty span
 	CKEDITOR.dtd.$removeEmpty.span = 0;
