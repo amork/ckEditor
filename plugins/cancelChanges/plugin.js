@@ -1,8 +1,8 @@
 CKEDITOR.plugins.add('cancelChanges', {
     showDelay: 300,
     hideDelay: 200,
-    topCorrection: 30,
-    leftCorrection: 20,
+    topCorrection: 34,
+    leftCorrection: 35,
     tooltipIsShowing: false,
 
     init: function(editor) {
@@ -41,7 +41,7 @@ CKEDITOR.plugins.add('cancelChanges', {
         this.tooltipIsShowing = true;
 
         $('<div class="ckeditor-tooltip" style="z-index: 100500; position: absolute; left:' + left + 'px; top:' + top + 'px;">' +
-            '<span class="ckeditor-tooltip__remove">&#10005;</span>' +
+            '<span class="ckeditor-tooltip__remove">&#10005;&nbsp;&nbsp;Reject</span>' +
             '</div>')
             .on('mouseover', function() {
                 clearTimeout(_this.timerHide);
