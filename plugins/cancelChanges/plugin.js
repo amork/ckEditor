@@ -1,8 +1,8 @@
 CKEDITOR.plugins.add('cancelChanges', {
     showDelay: 300,
     hideDelay: 200,
-    topCorrection: 34,
-    leftCorrection: 35,
+    topCorrection: 42,
+    leftCorrection: 20,
     tooltipIsShowing: false,
 
     init: function(editor) {
@@ -11,16 +11,24 @@ CKEDITOR.plugins.add('cancelChanges', {
         this.$body = $('body');
         editor.on('instanceReady', function() {
             var editorInstance = $(editor.editable().$);
+            var clientX = 0;
+            var clientY = 0;
 
             editorInstance.on('mouseover', 'ins:not([data-username]), del:not([data-username])', function(e) {
+                editorInstance.on('mousemove', function(e) {
+                    clientX = e.clientX;
+                    clientY = e.clientY;
+                });
+
                 if (_this.tooltipIsShowing) return;
 
                 clearTimeout(_this.timerShow);
                 clearTimeout(_this.timerHide);
-                _this.timerShow = setTimeout(function() {_this.showTooltip(e.currentTarget, editor)}, _this.showDelay);
+                _this.timerShow = setTimeout(function() {_this.showTooltip(e, clientX, clientY, editor)}, _this.showDelay);
             })
 
             editorInstance.on('mouseout click', 'ins, del', function(e) {
+                editorInstance.off('mousemove');
                 clearTimeout(_this.timerShow);
                 clearTimeout(_this.timerHide);
                 _this.timerHide = setTimeout(function() {_this.hideTooltip()}, _this.hideDelay);
@@ -32,16 +40,17 @@ CKEDITOR.plugins.add('cancelChanges', {
         });
     },
 
-    showTooltip: function(target, editor) {
+    showTooltip: function(e, clientX, clientY, editor) {
+        var target = e.target;
         var _this = this;
         var $tgt = $(target);
-        var top = $tgt.offset().top - this.topCorrection;
-        var left = $tgt.offset().left + Math.floor($tgt.width() / 2) - this.leftCorrection;
+        var top = clientY - this.topCorrection + window.pageYOffset - (document.clientTop || 0);
+        var left = Math.min(clientX, $tgt.offset().left + $tgt.width()) - this.leftCorrection + window.pageXOffset - (document.clientLeft || 0);
 
         this.tooltipIsShowing = true;
 
         $('<div class="ckeditor-tooltip" style="z-index: 100500; position: absolute; left:' + left + 'px; top:' + top + 'px;">' +
-            '<span class="ckeditor-tooltip__remove">&#10005;&nbsp;&nbsp;Reject</span>' +
+            '<span class="ckeditor-tooltip__remove">Reject</span>' +
             '</div>')
             .on('mouseover', function() {
                 clearTimeout(_this.timerHide);
