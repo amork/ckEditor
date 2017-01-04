@@ -21,6 +21,7 @@
 		onLoad: function() {
 			var cssStyles = (
 					'background:url(' + CKEDITOR.getUrl( this.path + 'images/pagebreak.gif' ) + ') no-repeat center center;' +
+					'display:inline-block;' +
 					'clear:both;' +
 					'width:100%;' +
 					'border-top:#999 1px dotted;' +
@@ -28,10 +29,10 @@
 					'padding:0;' +
 					'height:7px;' +
 					'cursor:default;'
-				).replace( /;/g, ' !important;' ); // Increase specificity to override other styles, e.g. block outline.
+			).replace( /;/g, ' !important;' ); // Increase specificity to override other styles, e.g. block outline.
 
 			// Add the style that renders our placeholder.
-			CKEDITOR.addCss( 'div.cke_pagebreak{' + cssStyles + '}' );
+			CKEDITOR.addCss( 'pgbr.cke_pagebreak{' + cssStyles + '}' );
 		},
 
 		init: function( editor ) {
@@ -52,7 +53,7 @@
 			CKEDITOR.env.webkit && editor.on( 'contentDom', function() {
 				editor.document.on( 'click', function( evt ) {
 					var target = evt.data.getTarget();
-					if ( target.is( 'div' ) && target.hasClass( 'cke_pagebreak' ) )
+					if ( target.is( 'pgbr' ) && target.hasClass( 'cke_pagebreak' ) )
 						editor.getSelection().selectElement( target );
 				} );
 			} );
@@ -61,10 +62,10 @@
 		afterInit: function( editor ) {
 			// Register a filter to displaying placeholders after mode change.
 			var dataProcessor = editor.dataProcessor,
-				dataFilter = dataProcessor && dataProcessor.dataFilter,
-				htmlFilter = dataProcessor && dataProcessor.htmlFilter,
-				styleRegex = /page-break-after\s*:\s*always/i,
-				childStyleRegex = /display\s*:\s*none/i;
+					dataFilter = dataProcessor && dataProcessor.dataFilter,
+					htmlFilter = dataProcessor && dataProcessor.htmlFilter,
+					styleRegex = /page-break-after\s*:\s*always/i,
+					childStyleRegex = /display\s*:\s*none/i;
 
 			function upcastPageBreak( element ) {
 				CKEDITOR.tools.extend( element.attributes, attributesSet( editor.lang.pagebreak.alt ), true );
@@ -93,9 +94,9 @@
 			}
 
 			if ( dataFilter ) {
-				dataFilter.addRules( {
+				dataFilter.addRules({
 					elements: {
-						div: function( element ) {
+						pgbr: function( element ) {
 							// The "internal form" of a pagebreak is pasted from clipboard.
 							// ACF may have distorted the HTML because "internal form" is
 							// different than "data form". Make sure that element remains valid
@@ -106,14 +107,11 @@
 							// Check for "data form" of the pagebreak. If both element and
 							// descendants match, convert them to internal form.
 							else if ( styleRegex.test( element.attributes.style ) ) {
-								var child = element.children[ 0 ];
-
-								if ( child && child.name == 'span' && childStyleRegex.test( child.attributes.style ) )
-									upcastPageBreak( element );
+								upcastPageBreak( element );
 							}
 						}
 					}
-				} );
+				});
 			}
 		}
 	} );
@@ -122,26 +120,26 @@
 	CKEDITOR.plugins.pagebreakCmd = {
 		exec: function( editor ) {
 			// Create read-only element that represents a print break.
-			var pagebreak = editor.document.createElement( 'div', {
+			var pagebreak = editor.document.createElement( 'pgbr', {
 				attributes: attributesSet( editor.lang.pagebreak.alt )
 			} );
 
 			editor.insertElement( pagebreak );
 		},
-		context: 'div',
+		//context: 'pgbr',
 		allowedContent: {
-			div: {
+			pgbr: {
 				styles: '!page-break-after'
 			},
 			span: {
 				match: function( element ) {
 					var parent = element.parent;
-					return parent && parent.name == 'div' && parent.styles && parent.styles[ 'page-break-after' ];
+					return parent && parent.name == 'pgbr' && parent.styles && parent.styles[ 'page-break-after' ];
 				},
 				styles: 'display'
 			}
 		},
-		requiredContent: 'div{page-break-after}'
+		requiredContent: 'pgbr{page-break-after}'
 	};
 
 	// Returns an object representing all the attributes
