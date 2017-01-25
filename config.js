@@ -4,6 +4,56 @@
  */
 
 CKEDITOR.editorConfig = function( config ) {
+	// Define changes to default configuration here. For example:
+	// config.language = 'fr';
+	// config.uiColor = '#AADC6E';
+	// %REMOVE_START%
+	config.plugins =
+		'tableresize,' +
+		'copyformatting,' +
+		'pagebreak,' +
+		'placeholder,' +
+		'base64image,' +
+		'basicstyles,' +
+		'blockquote,' +
+		'cancelChanges,' +
+		'clipboard,' +
+		'sharedspace,' +
+		'colorbutton,' +
+		'confighelper,' +
+		'contextmenu,' +
+		'divarea,' +
+		'enterkey,' +
+		'entities,' +
+		'filebrowser,' +
+		'find,' +
+		'floatingspace,' +
+		'font,' +
+		'format,' +
+		'horizontalrule,' +
+		'htmlwriter,' +
+		'indentblock,' +
+		'indentlist,' +
+		'justify,' +
+		'link,' +
+		'list,' +
+		'lite,' +
+		'maximize,' +
+		'panelbutton,' +
+		'pastebase64,' +
+		'pastefromword,' +
+		'pastetext,' +
+		'removeformat,' +
+		'showborders,' +
+		'sourcearea,' +
+		'specialchar,' +
+		'stylescombo,' +
+		'tab,' +
+		'table,' +
+		'tabletools,' +
+		'tabletoolstoolbar,' +
+		'toolbar,' +
+		'undo';
 	config.languages = {
 		en : 1
 	};
