@@ -42,6 +42,7 @@ CKEDITOR.editorConfig = function( config ) {
 		'maximize,' +
 		'panelbutton,' +
 		'pastefromword,' +
+		'pastefromexcel,' +
 		'pastetext,' +
 		'removeformat,' +
 		'showborders,' +
@@ -111,8 +112,8 @@ CKEDITOR.editorConfig = function( config ) {
 	};
 
 	config.font_names = 'Arial;' +
-		'Lucida Console;' +
 		'Comic Sans MS;' +
+		'Lucida Console;' +
 		'Calibri;' +
 		'Calibri Light;' +
 		'Courier New;' +
