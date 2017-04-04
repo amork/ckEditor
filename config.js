@@ -38,7 +38,6 @@ CKEDITOR.editorConfig = function( config ) {
 		'justify,' +
 		'link,' +
 		'list,' +
-		'lite,' +
 		'maximize,' +
 		'panelbutton,' +
 		'pastefromword,' +
