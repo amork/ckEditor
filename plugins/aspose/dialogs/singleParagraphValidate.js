@@ -1,4 +1,96 @@
-﻿(function(){CKEDITOR.dialog.add("singleParagraphValidate",function(d){return{title:"Multiple types of content warning",resizable:CKEDITOR.DIALOG_RESIZE_BOTH,minWidth:300,minHeight:100,onShow:function(){document.getElementById("singleparagraphValidate_errors").innerHTML=CKEDITOR._.errors.join("\n");document.querySelector("a.cke_dialog_ui_button_ok").style.backgroundColor="#1487f5"},contents:[{id:"singlepv",label:"First Tab",accessKey:"Q",elements:[{id:"msg",type:"html",html:'\x3cdiv\x3e\x3ch3\x3eMultiple types of content are detected (text, tables, multiple paragraphs).\x3c/h3\x3e\x3ch3\x3eOnly one of these can be inserted in a single action. First section will be\x3c/h3\x3e\x3ch3\x3einserted. Please insert remainder as separate discussions.\x3c/h3\x3e\x3cdiv id\x3d"singleparagraphValidate_errors"\x3e\x3c/div\x3e\x3c/div\x3e'}]}],
-onOk:function(){var b=$(d.editable().$).clone();useOnlyOneParagraph(d,b)},onCancel:function(){d.execCommand("undo")}}})})();
-function useOnlyOneParagraph(d,b){var c="",a=b.children(),a=b.children();1<a.length||-1!==["DIV"].indexOf(a[0].tagName)?-1!=="P DIV H1 H2 H3 H4 H5 H6 H7".split(" ").indexOf(a[0].tagName)?(b.find("table").remove(),a=b.children(),a.each(function(b){c=-1!=="P H1 H2 H3 H4 H5 H6 H7".split(" ").indexOf(this.tagName)?c+this.innerHTML:c+this.outerHTML;b!==a.length-1&&"\x3cbr\x3e"!==this.innerHTML&&this.innerText.trim().length&&(c+="\x3cbr\x3e");b&&this.parentNode.removeChild(this)}),a[0].innerHTML=c):(a=
-b.children(),a.each(function(a){a&&this.parentNode.removeChild(this)})):-1!==["OL","UL"].indexOf(a[0].tagName)&&1<a[0].children.length&&$(a[0]).children().each(function(a){a&&this.parentNode.removeChild(this)});d.setData(b.html())};
+(function () {
+	CKEDITOR.dialog.add( 'singleParagraphValidate', function( editor ) {
+		return {
+			title:          'Multiple types of content warning',
+			resizable:      CKEDITOR.DIALOG_RESIZE_BOTH,
+			minWidth:       300,
+			minHeight:      100,
+			onShow: function() {
+				var errors = document.getElementById('singleparagraphValidate_errors');
+
+				errors.innerHTML = CKEDITOR._.errors.join('\n');
+
+				var buttonOk = document.querySelector('a.cke_dialog_ui_button_ok');
+
+				buttonOk.style.backgroundColor = '#1487f5';
+			},
+			contents: [
+				{
+					id:         'singlepv',
+					label:      'First Tab',
+					accessKey:  'Q',
+					elements: [
+						{
+							id: 'msg',
+							type: 'html',
+							html: '<div>' +
+								'<h3>Multiple types of content are detected (text, tables, multiple paragraphs).</h3>' +
+								'<h3>Only one of these can be inserted in a single action. First section will be</h3>' +
+								'<h3>inserted. Please insert remainder as separate discussions.</h3>' +
+								'<div id="singleparagraphValidate_errors"></div>' +
+							'</div>'
+						}
+					]
+				}
+			],
+			onOk: function() {
+				var $editor = $(editor.editable().$).clone();
+
+				useOnlyOneParagraph(editor, $editor);
+			},
+			onCancel: function() {
+				editor.execCommand('undo');
+			}
+		};
+	} );
+})();
+
+function useOnlyOneParagraph(editor, $html) {
+	var innerHTML = '';
+	var children = $html.children();
+
+	children = $html.children();
+
+	if (children.length > 1 || ['DIV'].indexOf(children[0].tagName) !== -1) {
+		if (['P', 'DIV', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'H7'].indexOf(children[0].tagName) !== -1) {
+			$html.find('table').remove();
+			children = $html.children();
+
+			children.each(function(index) {
+				if (['P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'H7'].indexOf(this.tagName) !== -1) {
+					innerHTML += this.innerHTML;
+				} else {
+					innerHTML += this.outerHTML;
+				}
+
+				if (index !== children.length - 1) {
+					if (this.innerHTML !== '<br>' && this.innerText.trim().length) {
+						innerHTML += '<br>'
+					}
+				}
+
+				if (index) {
+					this.parentNode.removeChild(this);
+				}
+			});
+
+			children[0].innerHTML = innerHTML;
+		} else {
+			children = $html.children();
+			children.each(function(index) {
+				if (index) {
+					this.parentNode.removeChild(this);
+				}
+			});
+		}
+
+	} else if (['OL', 'UL'].indexOf(children[0].tagName) !== -1 && children[0].children.length > 1) {
+		$(children[0]).children().each(function(index) {
+			if (index) {
+				this.parentNode.removeChild(this);
+			}
+		})
+	}
+
+	editor.setData($html.html());
+}
