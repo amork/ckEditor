@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("horizontalrule","en",{});
+﻿CKEDITOR.plugins.setLang("smartfields","en",{});
