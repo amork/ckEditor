@@ -1,0 +1,1 @@
+﻿CKEDITOR.plugins.setLang("imagePlaceholder","en",{title:"Image Placeholder",alt:"Alternative Text",lockRatio:"Lock Ratio",vSpace:"VSpace",hSpace:"HSpace",border:"Border"});
